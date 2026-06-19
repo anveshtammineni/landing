@@ -98,17 +98,41 @@ export default function Experience() {
   const cardVariants = (index: number) => ({
     hidden: { 
       opacity: 0, 
-      x: index % 2 === 0 ? -50 : 50 
+      y: 60,
+      scale: 0.92,
+      rotateX: 12,
+      rotateY: index % 2 === 0 ? -10 : 10,
     },
     visible: {
       opacity: 1,
-      x: 0,
+      y: 0,
+      scale: 1,
+      rotateX: 0,
+      rotateY: 0,
       transition: {
-        duration: 0.8,
-        ease: "easeOut" as const,
+        type: "spring" as const,
+        stiffness: 55,
+        damping: 16,
+        mass: 0.8,
       },
     },
   });
+
+  const nodeVariants = {
+    hidden: { 
+      scale: 0, 
+      opacity: 0,
+    },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: "spring" as const,
+        stiffness: 140,
+        damping: 14,
+      },
+    },
+  };
 
   return (
     <section id="experience" className="relative py-28 px-6 overflow-hidden z-10">
@@ -177,7 +201,7 @@ export default function Experience() {
               return (
                 <div key={index} className="relative flex flex-col md:flex-row items-stretch md:justify-between">
                   {/* Spacer or Left Card */}
-                  <div className={`w-full md:w-[45%] flex ${isEven ? "justify-end" : "order-last md:order-first justify-start"}`}>
+                  <div style={{ perspective: 1000 }} className={`w-full md:w-[45%] flex ${isEven ? "justify-end" : "order-last md:order-first justify-start"}`}>
                     {!isEven && (
                       <div className="hidden md:block w-full" /> // Spacer for right aligned cards
                     )}
@@ -202,7 +226,7 @@ export default function Experience() {
                           <MapPin size={12} />
                           <span>{job.location}</span>
                         </div>
-
+ 
                         <ul className="space-y-3 text-sm text-slate-400 leading-relaxed list-none pl-0">
                           {job.description.map((bullet, bIdx) => (
                             <li key={bIdx} className="flex flex-row-reverse gap-2 items-start justify-start">
@@ -214,18 +238,21 @@ export default function Experience() {
                       </motion.div>
                     )}
                   </div>
-
+ 
                   {/* Icon Timeline Node */}
-                  <div className="absolute left-4 md:left-1/2 top-8 w-8 h-8 rounded-full bg-space-black border border-white/10 flex items-center justify-center -translate-x-1/2 z-20 group">
+                  <motion.div
+                    variants={nodeVariants}
+                    className="absolute left-4 md:left-1/2 top-8 w-8 h-8 rounded-full bg-space-black border border-white/10 flex items-center justify-center -translate-x-1/2 z-20 group"
+                  >
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ repeat: Infinity, duration: 2, delay: index * 0.5 }}
                       className={`w-3.5 h-3.5 rounded-full bg-gradient-to-r ${job.color}`}
                     />
-                  </div>
-
+                  </motion.div>
+ 
                   {/* Right Card or Spacer */}
-                  <div className={`w-full md:w-[45%] flex ${!isEven ? "justify-start" : "justify-end"}`}>
+                  <div style={{ perspective: 1000 }} className={`w-full md:w-[45%] flex ${!isEven ? "justify-start" : "justify-end"}`}>
                     {isEven && (
                       <div className="hidden md:block w-full" /> // Spacer for left aligned cards
                     )}
@@ -250,7 +277,7 @@ export default function Experience() {
                           <MapPin size={12} />
                           <span>{job.location}</span>
                         </div>
-
+ 
                         <ul className="space-y-3 text-sm text-slate-400 leading-relaxed list-none">
                           {job.description.map((bullet, bIdx) => (
                             <li key={bIdx} className="flex gap-2 items-start justify-start">
