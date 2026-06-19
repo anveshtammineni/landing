@@ -44,6 +44,7 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const validate = (): boolean => {
     const tempErrors: FormErrors = {};
@@ -138,6 +139,26 @@ export default function Contact() {
     { icon: Mail, href: "mailto:anveshtammineni@gmail.com", label: "Email", color: "hover:text-accent-blue" },
   ];
 
+  const formVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.2,
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" as const }
+    }
+  };
+
   return (
     <section id="contact" className="relative py-28 px-6 overflow-hidden z-10">
       <div className="max-w-7xl mx-auto">
@@ -176,15 +197,25 @@ export default function Contact() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="lg:col-span-5 space-y-8"
           >
-            <div className="p-8 rounded-3xl border border-white/5 bg-space-card backdrop-blur-md">
-              <h3 className="text-2xl font-bold font-display text-white mb-6">
+            <div className="p-8 rounded-3xl border border-white/5 bg-space-card backdrop-blur-md relative overflow-hidden group">
+              {/* Floating Backglow */}
+              <motion.div
+                animate={{
+                  x: [0, 15, 0],
+                  y: [0, -10, 0],
+                  scale: [1, 1.15, 1],
+                }}
+                transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
+                className="absolute -top-10 -right-10 w-36 h-36 bg-accent-cyan/10 rounded-full filter blur-2xl pointer-events-none"
+              />
+              <h3 className="relative z-10 text-2xl font-bold font-display text-white mb-6">
                 Let's collaborate on something great.
               </h3>
-              <p className="text-slate-400 leading-relaxed text-sm mb-8">
+              <p className="relative z-10 text-slate-400 leading-relaxed text-sm mb-8">
                 Whether you have a specific project idea, are looking to hire a full-stack engineer, or want to discuss artificial intelligence and procedural rendering, drop a message!
               </p>
               
-              <div className="space-y-4">
+              <div className="relative z-10 space-y-4">
                 <div className="flex items-center gap-4 text-slate-300">
                   <div className="p-2.5 rounded-xl bg-white/5 text-accent-cyan">
                     <Mail size={18} />
@@ -201,11 +232,21 @@ export default function Contact() {
             </div>
 
             {/* Social Grid */}
-            <div className="p-8 rounded-3xl border border-white/5 bg-space-card backdrop-blur-md">
-              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
+            <div className="p-8 rounded-3xl border border-white/5 bg-space-card backdrop-blur-md relative overflow-hidden">
+              {/* Floating Backglow */}
+              <motion.div
+                animate={{
+                  x: [0, -12, 0],
+                  y: [0, 15, 0],
+                  scale: [1, 1.2, 1],
+                }}
+                transition={{ duration: 7, repeat: Infinity, repeatType: "reverse" }}
+                className="absolute -bottom-12 -left-12 w-32 h-32 bg-accent-purple/10 rounded-full filter blur-2xl pointer-events-none"
+              />
+              <h4 className="relative z-10 text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
                 Connect channels
               </h4>
-              <div className="flex gap-4">
+              <div className="relative z-10 flex gap-4">
                 {socials.map((social, index) => {
                   const Icon = social.icon;
                   return (
@@ -235,62 +276,138 @@ export default function Contact() {
             className="lg:col-span-7 p-8 rounded-3xl border border-white/5 bg-space-card backdrop-blur-md relative overflow-hidden"
           >
             {/* Ambient glows inside card */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-accent-purple/5 rounded-full filter blur-2xl pointer-events-none" />
+            <motion.div
+              animate={{
+                scale: [1, 1.25, 1],
+                x: [0, 20, 0],
+                y: [0, -20, 0],
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+              className="absolute -top-12 -right-12 w-48 h-48 bg-gradient-to-br from-accent-cyan/10 to-accent-purple/10 rounded-full filter blur-3xl pointer-events-none"
+            />
+            <motion.div
+              animate={{
+                scale: [1, 1.3, 1],
+                x: [0, -25, 0],
+                y: [0, 25, 0],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                repeatType: "reverse",
+                delay: 1,
+              }}
+              className="absolute -bottom-16 -left-16 w-52 h-52 bg-gradient-to-br from-accent-pink/5 to-accent-purple/5 rounded-full filter blur-3xl pointer-events-none"
+            />
 
-            <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+            <motion.form 
+              variants={formVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              onSubmit={handleSubmit} 
+              className="space-y-6 relative z-10"
+            >
               {/* Name field */}
-              <div className="space-y-2">
+              <motion.div variants={itemVariants} className="space-y-2">
                 <label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-slate-400 block">
                   Name
                 </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 px-5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan focus:bg-white/10 transition-all"
-                  placeholder="Enter your name"
-                />
+                <div className="relative">
+                  {/* Glowing Focus Backdrop */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      opacity: focusedField === "name" ? 1 : 0,
+                      scale: focusedField === "name" ? 1.015 : 1,
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute -inset-[1.5px] rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-purple to-accent-pink filter blur-[2px] pointer-events-none z-0"
+                  />
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("name")}
+                    onBlur={() => setFocusedField(null)}
+                    className="relative z-10 w-full bg-[#0a0720]/90 border border-white/10 rounded-2xl py-4 px-5 text-sm text-white placeholder-slate-500 focus:outline-none focus:bg-[#070517] transition-all"
+                    placeholder="Enter your name"
+                  />
+                </div>
                 {errors.name && <span className="text-xs text-red-400 font-semibold">{errors.name}</span>}
-              </div>
+              </motion.div>
 
               {/* Email field */}
-              <div className="space-y-2">
+              <motion.div variants={itemVariants} className="space-y-2">
                 <label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-slate-400 block">
                   Email Address
                 </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 px-5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan focus:bg-white/10 transition-all"
-                  placeholder="Enter your email"
-                />
+                <div className="relative">
+                  {/* Glowing Focus Backdrop */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      opacity: focusedField === "email" ? 1 : 0,
+                      scale: focusedField === "email" ? 1.015 : 1,
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute -inset-[1.5px] rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-purple to-accent-pink filter blur-[2px] pointer-events-none z-0"
+                  />
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("email")}
+                    onBlur={() => setFocusedField(null)}
+                    className="relative z-10 w-full bg-[#0a0720]/90 border border-white/10 rounded-2xl py-4 px-5 text-sm text-white placeholder-slate-500 focus:outline-none focus:bg-[#070517] transition-all"
+                    placeholder="Enter your email"
+                  />
+                </div>
                 {errors.email && <span className="text-xs text-red-400 font-semibold">{errors.email}</span>}
-              </div>
+              </motion.div>
 
               {/* Message field */}
-              <div className="space-y-2">
+              <motion.div variants={itemVariants} className="space-y-2">
                 <label htmlFor="message" className="text-xs font-bold uppercase tracking-widest text-slate-400 block">
                   Message
                 </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={5}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-4 px-5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan focus:bg-white/10 transition-all resize-none"
-                  placeholder="Tell me about your project..."
-                />
+                <div className="relative">
+                  {/* Glowing Focus Backdrop */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      opacity: focusedField === "message" ? 1 : 0,
+                      scale: focusedField === "message" ? 1.012 : 1,
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute -inset-[1.5px] rounded-2xl bg-gradient-to-r from-accent-cyan via-accent-purple to-accent-pink filter blur-[2px] pointer-events-none z-0"
+                  />
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("message")}
+                    onBlur={() => setFocusedField(null)}
+                    rows={5}
+                    className="relative z-10 w-full bg-[#0a0720]/90 border border-white/10 rounded-2xl py-4 px-5 text-sm text-white placeholder-slate-500 focus:outline-none focus:bg-[#070517] transition-all resize-none"
+                    placeholder="Tell me about your project..."
+                  />
+                </div>
                 {errors.message && <span className="text-xs text-red-400 font-semibold">{errors.message}</span>}
-              </div>
+              </motion.div>
 
               {submitError && (
                 <motion.div
+                  variants={itemVariants}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="p-4 rounded-2xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs font-semibold text-center leading-relaxed"
@@ -300,48 +417,51 @@ export default function Contact() {
               )}
 
               {/* Submit Button */}
-              <Magnetic className="w-full">
-                <button
-                  type="submit"
-                  disabled={isSubmitting || isSuccess}
-                  className="w-full py-4.5 rounded-2xl font-bold text-white bg-gradient-to-r from-accent-cyan via-accent-purple to-accent-pink hover:bg-size-200 transition-all duration-300 shadow-[0_0_20px_rgba(127,0,255,0.2)] hover:shadow-[0_0_25px_rgba(0,242,254,0.3)] flex items-center justify-center gap-3 disabled:opacity-85"
-                >
-                  <AnimatePresence mode="wait">
-                    {isSubmitting ? (
-                      <motion.span
-                        key="submitting"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-2"
-                      >
-                        <Loader2 className="animate-spin" size={18} /> Processing Transmission...
-                      </motion.span>
-                    ) : isSuccess ? (
-                      <motion.span
-                        key="success"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-2 text-white"
-                      >
-                        <CheckCircle2 size={18} /> Sent Successfully!
-                      </motion.span>
-                    ) : (
-                      <motion.span
-                        key="default"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-2"
-                      >
-                        Send Transmission <Send size={16} />
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </button>
-              </Magnetic>
-            </form>
+              <motion.div variants={itemVariants}>
+                <Magnetic className="w-full">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || isSuccess}
+                    className="w-full py-4.5 rounded-2xl font-bold text-white bg-gradient-to-r from-accent-cyan via-accent-purple to-accent-pink hover:bg-size-200 transition-all duration-300 shadow-[0_0_20px_rgba(127,0,255,0.2)] hover:shadow-[0_0_25px_rgba(0,242,254,0.3)] flex items-center justify-center gap-3 disabled:opacity-85 group"
+                  >
+                    <AnimatePresence mode="wait">
+                      {isSubmitting ? (
+                        <motion.span
+                          key="submitting"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="flex items-center gap-2"
+                        >
+                          <Loader2 className="animate-spin" size={18} /> Processing Transmission...
+                        </motion.span>
+                      ) : isSuccess ? (
+                        <motion.span
+                          key="success"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="flex items-center gap-2 text-white"
+                        >
+                          <CheckCircle2 size={18} /> Sent Successfully!
+                        </motion.span>
+                      ) : (
+                        <motion.span
+                          key="default"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="flex items-center gap-2"
+                        >
+                          Send Transmission 
+                          <Send size={16} className="transition-transform duration-300 group-hover:translate-x-1.5 group-hover:-translate-y-1 group-hover:scale-110" />
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </button>
+                </Magnetic>
+              </motion.div>
+            </motion.form>
           </motion.div>
         </div>
       </div>
