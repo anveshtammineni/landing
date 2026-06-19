@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Calendar, MapPin } from "lucide-react";
 
 interface Job {
@@ -68,6 +69,22 @@ const experiences: Job[] = [
 ];
 
 export default function Experience() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 25,
+    restDelta: 0.001,
+  });
+
+  // Calculate position of traveling 3D glow dot
+  const sphereY = useTransform(scaleY, [0, 1], ["0%", "100%"]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -121,11 +138,30 @@ export default function Experience() {
             className="h-1 bg-gradient-to-r from-accent-cyan to-accent-purple mx-auto mt-4 rounded-full"
           />
         </div>
-
+ 
         {/* Timeline container */}
-        <div className="relative">
-          {/* Centered timeline vertical line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-accent-cyan via-accent-purple to-transparent -translate-x-[1px]" />
+        <div ref={containerRef} className="relative">
+          {/* Centered 3D cylinder vertical timeline track */}
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[6px] bg-[#0c0835]/80 rounded-full -translate-x-1/2 border border-white/5 shadow-[inset_1px_1px_3px_rgba(0,0,0,0.8),inset_-1px_-1px_3px_rgba(255,255,255,0.05)]">
+            {/* Scroll-driven glow overlay line */}
+            <motion.div
+              style={{ scaleY }}
+              className="absolute inset-0 bg-gradient-to-b from-accent-cyan via-accent-purple to-accent-pink origin-top rounded-full shadow-[0_0_8px_rgba(0,242,254,0.6)]"
+            />
+            {/* 3D Traveling Pulse Capsule */}
+            <motion.div
+              style={{ top: sphereY }}
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-gradient-to-r from-accent-cyan via-accent-purple to-accent-pink p-[1px] shadow-[0_0_15px_rgba(0,242,254,0.8),0_0_30px_rgba(127,0,255,0.6)] flex items-center justify-center z-30"
+            >
+              <div className="w-full h-full rounded-full bg-space-black flex items-center justify-center">
+                <motion.div 
+                  animate={{ scale: [0.75, 1.25, 0.75] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="w-2.5 h-2.5 rounded-full bg-accent-cyan shadow-[0_0_8px_rgba(0,242,254,1)]"
+                />
+              </div>
+            </motion.div>
+          </div>
 
           {/* Timeline Cards */}
           <motion.div

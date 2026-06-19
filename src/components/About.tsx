@@ -79,7 +79,7 @@ export default function About() {
 
             <h3 className="text-2xl font-bold font-display text-white mb-6 flex items-center gap-3">
               <span className="w-2.5 h-2.5 rounded-full bg-accent-cyan animate-pulse" />
-              Biography.exe
+              Biography
             </h3>
 
             <div className="space-y-6 text-slate-300 font-sans leading-relaxed text-base">
