@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import type { MouseEvent } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Cpu, Layout, Globe } from "lucide-react";
+import { Cpu, Layout, Globe, ExternalLink } from "lucide-react";
 import Magnetic from "./ui/Magnetic";
 
 const GithubIcon = (props: any) => (
@@ -48,7 +48,7 @@ const projects: Project[] = [
     description: "A responsive Sudoku platform incorporating puzzle generation algorithms, JWT authentication, request validation, and persistent game state.",
     tags: ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
     github: "https://github.com/anveshtammineni/Sudoku",
-    demo: "https://demo.com",
+    demo: "https://sudoku-client-seven.vercel.app/",
     category: "Full-Stack Web App",
     color: "from-accent-blue to-accent-purple",
     icon: Layout,
@@ -157,7 +157,7 @@ function ProjectCard({ project }: { project: Project }) {
       </div>
 
       {/* Actions */}
-      <div className="flex gap-4 items-center" style={{ transform: "translateZ(45px)" }}>
+      <div className="flex gap-3.5 items-center" style={{ transform: "translateZ(45px)" }}>
         <Magnetic>
           <a
             href={project.github}
@@ -168,6 +168,18 @@ function ProjectCard({ project }: { project: Project }) {
             <GithubIcon className="w-3.5 h-3.5" /> View Code
           </a>
         </Magnetic>
+        {project.demo && project.demo !== "https://demo.com" && (
+          <Magnetic>
+            <a
+              href={project.demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-accent-cyan hover:text-white px-5 py-2.5 rounded-full border border-accent-cyan/20 bg-accent-cyan/5 transition-all hover:border-accent-cyan/40 hover:bg-accent-cyan/10"
+            >
+              <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+            </a>
+          </Magnetic>
+        )}
       </div>
     </motion.div>
   );
